@@ -9,17 +9,24 @@ def load_voice_encoder():
     return VoiceEncoder()
 
 def get_voice_embedding(audio_bytes):
+    print("get_voice_embedding called")
+
     try:
         encoder = load_voice_encoder()
 
-        audio, sr = librosa.load(io.BytesIO(audio_bytes), sr = 16000)
+        audio, sr = librosa.load(io.BytesIO(audio_bytes), sr=16000)
+        print("Audio length:", len(audio))
+
         wav = preprocess_wav(audio)
+
         embedding = encoder.embed_utterance(wav)
+        print("Embedding length:", len(embedding))
+
         return embedding.tolist()
+
     except Exception as e:
-        st.error('Voice recognition error')
-        return None
-    
+        print("Voice error:", e)
+        raise
 def identify_speaker(new_embedding, candidates_dict, threshold=0.65):
     if new_embedding is None or not candidates_dict:
         return None, 0.0
