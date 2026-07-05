@@ -3,6 +3,7 @@
 *.pyc
 __pycache__/
 venv/
-.streamlit
+.streamlit/
 
 dist/
+diblib/
