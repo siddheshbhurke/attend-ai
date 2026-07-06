@@ -60,9 +60,21 @@ def create_subject(subject_code, name, section, teacher_id):
 
 
 def get_teacher_subjects(teacher_id):
-    response = supabase.table("subjects").select("*, subject_students(count), attendance_logs(timestamps)" ).eq("teacher_id", teacher_id).execute()
-    subjects = response.data
+    try:
+        response = (
+            supabase.table("subjects")
+            .select("*, subject_students(count), attendance_logs(timestamp)")
+            .eq("teacher_id", teacher_id)
+            .execute()
+        )
 
+        return response.data
+
+    except Exception as e:
+        print("=" * 80)
+        print(e)
+        print("=" * 80)
+        raise
 
     for sub in subjects:
         sub['total_students'] = sub.get("subject_students", [{}])[0].get('count', 0) if sub.get('subject_students') else 0

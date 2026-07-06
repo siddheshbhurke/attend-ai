@@ -6,9 +6,9 @@ from src.components.header import header_dashboard
 from src.components.footer import footer_dashboard
 
 from src.database.db import create_teacher, check_teacher_exists, teacher_login, get_teacher_subjects
-from src.components.dialog_create_subject import create_subject_dialog
+import src.components.dialog_create_subject as dialog_module
 from src.components.subject_card import subject_card
-
+from src.components.dialog_share_subject import share_subject_dialog
 
 def teacher_screen():
     style_background_dashboard()
@@ -45,23 +45,39 @@ def teacher_dashboard():
         
     tab1,tab2,tab3 = st.columns(3)
 
+    tab1, tab2, tab3 = st.columns(3)
+
+    tab1, tab2, tab3 = st.columns(3)
+
     with tab1:
-        type1 = "primary" if st.session_state.current_teacher_tab == "take_attendance" else "tertiary"
-        if st.button("Take Attendance",type = type1, width = "stretch", icon=":material/ar_on_you:"):
-                    st.session_state.current_teacher_tab = "take_attendance"
-                    st.rerun()
+        if st.button(
+            "Take Attendance",
+            type="tertiary" if st.session_state.current_teacher_tab == "take_attendance" else "primary",
+            width="stretch",
+            icon=":material/ar_on_you:",
+        ):
+            st.session_state.current_teacher_tab = "take_attendance"
+            st.rerun()
 
     with tab2:
-        type2 = "primary" if st.session_state.current_teacher_tab == "take_attendance" else "tertiary" 
-        if st.button("Manage Subjects",type = type2, width = "stretch", icon=":material/book_ribbon:"):
-                    st.session_state.current_teacher_tab = "manage_subjects"
-                    st.rerun()
+        if st.button(
+            "Manage Subjects",
+            type="tertiary" if st.session_state.current_teacher_tab == "manage_subjects" else "primary",
+            width="stretch",
+            icon=":material/book_ribbon:",
+        ):
+            st.session_state.current_teacher_tab = "manage_subjects"
+            st.rerun()
 
     with tab3:
-        type3 = "primary" if st.session_state.current_teacher_tab == "take_attendance" else "tertiary"
-        if st.button("Attendance Records", type= type2, width = "stretch", icon=":material/cards_stack:"):
-                    st.session_state.current_teacher_tab = "attendance_records"
-                    st.rerun()
+        if st.button(
+            "Attendance Records",
+            type="tertiary" if st.session_state.current_teacher_tab == "attendance_records" else "primary",
+            width="stretch",
+            icon=":material/cards_stack:",
+        ):
+            st.session_state.current_teacher_tab = "attendance_records"
+            st.rerun()
 
     
     if st.session_state.current_teacher_tab == "take_attendance":
@@ -91,38 +107,52 @@ def teacher_tab_manage_subjects():
 
     with col2:
         if st.button('Create New Subject', width = "stretch"):
-            create_subject_dialog(teacher_id)
+            dialog_module.create_subject_dialog(teacher_id)
 
 
     #list all subjects
     subjects = get_teacher_subjects(teacher_id)
+
     if subjects:
         for sub in subjects:
+
+            total_students = (
+                sub["subject_students"][0]["count"]
+                if sub.get("subject_students")
+                else 0
+            )
+
+            total_classes = (
+                sub["attendance_logs"][0]["count"]
+                if sub.get("attendance_logs")
+                else 0
+            )
+
             stats = [
-                ("👥", "Students", sub['total_students']),
-                ("🧑‍🏫", "Classes", sub['total_classess']),
-
+                ("👥", "Students", total_students),
+                ("🧑‍🏫", "Classes", total_classes),
             ]
-    
-    
 
-            def share_btn():
-                if st.button(f"Share Code: {sub['name']}", key=f"share {sub['subject_code']}", icon=":material/share:"):
-                    share_subject_dialog(sub['name'], sub['subject_code'])
+            def share_btn(sub=sub):
+                if st.button(
+                    f"Share Code: {sub['name']}",
+                    key=f"share_{sub['subject_code']}",
+                    icon=":material/share:"
+                ):
+                    share_subject_dialog(sub['name'], sub["subject_code"]) 
 
             st.space()
 
-
             subject_card(
-                name = sub['name'],
-                code = sub['subject_code'],
-                section = sub['section'],
-                stats = stats,
-                footer_callback = share_btn
-        )
+                name=sub["name"],
+                code=sub["subject_code"],
+                section=sub["section"],
+                stats=stats,
+                footer_callback=share_btn,
+            )
+
     else:
         st.info("NO SUBJECT FOUND, Create One Above")
-
 def teacher_tab_attendance_records():
      st.header('Attendance records')
 
@@ -234,3 +264,6 @@ def teacher_screen_register():
             st.session_state.teacher_login_type="login"
             
     footer_dashboard()
+
+
+    
