@@ -227,7 +227,8 @@ def teacher_tab_take_attendance():
 
                         # Show ONE dialog only
                         attendance_result_dialog(
-                            pd.DataFrame(results)
+                            pd.DataFrame(results),
+                            attendance_to_log,
                         )
 
         with c3:
