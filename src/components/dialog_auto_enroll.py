@@ -6,7 +6,7 @@ from src.database.config import supabase
 from src.database.db import enroll_student_to_subject
 
 
-@st.dialog("Enroll in Subject")
+@st.dialog("Auto Enroll in Subject")
 def auto_enroll_dialog(subject_code):
     student_id = st.session_state.student_data['student_id']
     st.write("Subject code:", repr(subject_code))
