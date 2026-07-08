@@ -68,26 +68,36 @@ def get_teacher_subjects(teacher_id):
             .execute()
         )
 
-        return response.data
+        subjects = response.data
+
+        for sub in subjects:
+            # Total students
+            sub["total_students"] = (
+                sub.get("subject_students", [{}])[0].get("count", 0)
+                if sub.get("subject_students")
+                else 0
+            )
+
+            # Total classes (unique attendance sessions)
+            attendance = sub.get("attendance_logs", [])
+
+            unique_sessions = len(
+                set(log["timestamp"] for log in attendance)
+            )
+
+            sub["total_classes"] = unique_sessions
+
+            # Remove nested objects
+            sub.pop("subject_students", None)
+            sub.pop("attendance_logs", None)
+
+        return subjects
 
     except Exception as e:
         print("=" * 80)
         print(e)
         print("=" * 80)
         raise
-
-    for sub in subjects:
-        sub['total_students'] = sub.get("subject_students", [{}])[0].get('count', 0) if sub.get('subject_students') else 0
-        attendance = sub.get("attendance_log", [])
-        unique_sessions = len(set(log['timestamp'] for log in attendance))
-        sub['total_classes'] = unique_sessions
-
-
-        sub.pop['subject_student', None]
-        sub.pop['attendance_logs', None]
-
-    
-    return subjects
 
 
 
@@ -119,4 +129,9 @@ def get_student_attendance(student_id):
 
 def create_attendance(logs):
     response = supabase.table("attendance_logs").insert(logs).execute()
+    return response.data
+
+
+def get_attendance_for_teacher(teacher_id):
+    response = supabase.table('attendance_logs').select("*, subjects!inner(*)").eq('subjects.teacher_id', teacher_id).execute()
     return response.data
