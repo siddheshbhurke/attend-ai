@@ -249,13 +249,15 @@ Main tables:
 
 # 📷 Screenshots
 
-> Add screenshots of:
+<img width="490" height="495" alt="image" src="https://github.com/user-attachments/assets/2f7db4e1-f016-4c0b-b4e3-35cd54f29efd" />
+<img width="622" height="649" alt="image" src="https://github.com/user-attachments/assets/5df7a0b9-39fe-4cea-9f6e-dcae3082c9ad" />
+<img width="590" height="359" alt="image" src="https://github.com/user-attachments/assets/b3442383-7d76-4cf1-9811-ab7552b2a428" />
+<img width="359" height="256" alt="image" src="https://github.com/user-attachments/assets/6fb4c05f-72b2-467e-bbe0-bc535dff94a7" />
+<img width="617" height="589" alt="image" src="https://github.com/user-attachments/assets/feed8f0a-4555-470d-a013-09f16ed003cb" />
+<img width="592" height="396" alt="image" src="https://github.com/user-attachments/assets/b2b0533b-e2cd-4b21-bfe5-7892201198a4" />
 
-- Home Page
-- Teacher Dashboard
-- Student Dashboard
-- Attendance Result
-- Subject Management
+
+
 
 ---
 
