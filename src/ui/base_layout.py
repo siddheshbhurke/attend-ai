@@ -35,11 +35,11 @@ def style_base_layout():
 
     <style>
 
-        #MainMenu,
-        footer,
-        header{
-            visibility:hidden;
-        }
+        # #MainMenu,
+        # footer,
+        # header{
+        #     visibility:hidden;
+        # }
 
         .block-container{
             padding-top:1.5rem !important;
